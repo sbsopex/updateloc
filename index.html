@@ -53,6 +53,18 @@
     box-shadow:var(--shadow);
   }
   .filters{padding:18px;margin-top:-8px}
+  .view-tabs{
+    display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px;
+    padding-bottom:14px;border-bottom:1px solid var(--line);
+  }
+  .mode-btn{
+    min-height:38px;padding:9px 14px;border:1px solid #d8e0ea;
+    background:#f8fafc;color:#475569;box-shadow:none;
+  }
+  .mode-btn:hover{background:#eef4fb}
+  .mode-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
+  .mode-hint{margin-left:auto;color:var(--muted);font-size:12px;font-weight:650}
+  button:disabled,input:disabled{opacity:.48;cursor:not-allowed}
   .filter-grid{
     display:grid;
     grid-template-columns:minmax(210px,1.4fr) repeat(3,minmax(135px,.7fr)) auto auto;
@@ -247,6 +259,11 @@
 
   <main>
     <section class="panel filters">
+      <div class="view-tabs" aria-label="Pilihan tampilan data">
+        <button class="mode-btn active" id="modeFilteredBtn" type="button">Data Berdasarkan Tanggal</button>
+        <button class="mode-btn" id="modeOverallBtn" type="button">Total Stock Keseluruhan</button>
+        <div class="mode-hint" id="filterModeHint">Mengikuti filter tanggal dan jam Dtm IN</div>
+      </div>
       <div class="filter-grid">
         <div>
           <label>Upload Excel Baru (.xlsx)</label>
@@ -277,7 +294,7 @@
 
     <section class="kpi-grid">
       <div class="panel kpi">
-        <div class="kpi-label">Total Stock Terfilter</div>
+        <div class="kpi-label" id="kpiTotalLabel">Total Stock Terfilter</div>
         <div class="kpi-value" id="kpiTotal">0</div>
         <div class="kpi-sub" id="kpiPeriod">—</div>
       </div>
@@ -360,8 +377,8 @@
         <div class="scroll-table" style="margin-top:12px"><table id="conditionTable"></table></div>
       </div>
       <div class="panel table-card">
-        <h2 class="section-title">Breakdown Grade</h2>
-        <div class="section-sub">Perbandingan berdasarkan grade container</div>
+        <h2 class="section-title">Breakdown Kelompok Grade</h2>
+        <div class="section-sub">Perbandingan berdasarkan kelompok grade PQC, K, dan Q</div>
         <div class="scroll-table" style="margin-top:12px"><table id="gradeTable"></table></div>
       </div>
       <div class="panel table-card">
@@ -411,6 +428,7 @@ let filteredData = [];
 let detailData = [];
 let currentPage = 1;
 let currentSource = INITIAL_SOURCE;
+let currentMode = "filtered";
 
 const $ = id => document.getElementById(id);
 const fmt = new Intl.NumberFormat("id-ID");
@@ -513,6 +531,15 @@ function setDateBounds(){
 }
 
 function applyFilters(){
+  if(currentMode === "overall"){
+    filteredData=[...allData];
+    currentPage=1;
+    $("searchInput").value="";
+    renderAll();
+    setMessage(`${fmt.format(filteredData.length)} baris total stock ditampilkan tanpa filter tanggal dan jam.`,"ok");
+    return;
+  }
+
   const selected=$("dateFilter").value;
   const start=timeSeconds($("startTime").value);
   const end=timeSeconds($("endTime").value)+59;
@@ -540,6 +567,22 @@ function applyFilters(){
   setMessage(`${fmt.format(filteredData.length)} baris ditampilkan untuk ${rangeText}.`,"ok");
 }
 
+function setMode(mode){
+  currentMode=mode === "overall" ? "overall" : "filtered";
+  const overall=currentMode === "overall";
+
+  $("modeFilteredBtn").classList.toggle("active",!overall);
+  $("modeOverallBtn").classList.toggle("active",overall);
+  $("filterModeHint").textContent=overall
+    ? "Menampilkan seluruh stock dari semua tanggal Dtm IN"
+    : "Mengikuti filter tanggal dan jam Dtm IN";
+
+  ["dateFilter","startTime","endTime","applyBtn","resetBtn"].forEach(id=>{
+    $(id).disabled=overall;
+  });
+  applyFilters();
+}
+
 function resetFilters(){
   setDateBounds();
   $("startTime").value="00:00";
@@ -561,13 +604,16 @@ function summarize(rows){
 
 function renderAll(){
   const s=summarize(filteredData);
+  $("kpiTotalLabel").textContent=currentMode === "overall" ? "Total Stock Keseluruhan" : "Total Stock Terfilter";
   $("kpiTotal").textContent=fmt.format(s.total);
   $("kpiUpdated").textContent=fmt.format(s.updated);
   $("kpiNoUpdate").textContent=fmt.format(s.noUpdate);
   $("kpiRate").textContent=`${s.rate.toFixed(1)}%`;
   $("kpiUpdatedSub").textContent=`${s.rate.toFixed(1)}% dari total`;
   $("kpiNoUpdateSub").textContent=`${(s.total ? s.noUpdate/s.total*100 : 0).toFixed(1)}% dari total`;
-  $("kpiPeriod").textContent=`${$("dateFilter").value || "—"} • ${$("startTime").value}–${$("endTime").value}`;
+  $("kpiPeriod").textContent=currentMode === "overall"
+    ? "Semua tanggal dan jam Dtm IN"
+    : `${$("dateFilter").value || "—"} • ${$("startTime").value}–${$("endTime").value}`;
 
   $("pieRate").textContent=`${s.rate.toFixed(1)}%`;
   $("legendUpdated").textContent=fmt.format(s.updated);
@@ -583,7 +629,7 @@ function renderAll(){
   renderBreakdown("ownerTable",r=>r.Owner||"(Blank)","Owner");
   renderBreakdown("sizeTypeTable",r=>`${r.Size||"-"} ${r.Type||"-"}`.trim(),"Size Type");
   renderBreakdown("conditionTable",r=>r.Condition||"(Blank)","Condition");
-  renderBreakdown("gradeTable",r=>r.Grade||"(Blank)","Grade");
+  renderBreakdown("gradeTable",r=>gradeBucket(r.Grade),"Kelompok Grade",["PQC","K","Q"]);
   renderBreakdown("actInTable",r=>r["Act IN"]||"(Blank)","Act IN");
   applySearch();
 }
@@ -657,7 +703,7 @@ function renderMatrixTable(){
   $("matrixTable").innerHTML=head+`<tbody>${body}</tbody>`+foot;
 }
 
-function renderBreakdown(tableId,keyFn,label){
+function renderBreakdown(tableId,keyFn,label,preferredOrder=[]){
   const map=new Map();
   for(const r of filteredData){
     const key=keyFn(r);
@@ -666,7 +712,15 @@ function renderBreakdown(tableId,keyFn,label){
     r._updated?item.updated++:item.noUpdate++;
     map.set(key,item);
   }
-  const rows=[...map.values()].sort((a,b)=>b.total-a.total || String(a.key).localeCompare(String(b.key)));
+  const orderIndex=key=>{
+    const i=preferredOrder.indexOf(String(key));
+    return i<0?Number.MAX_SAFE_INTEGER:i;
+  };
+  const rows=[...map.values()].sort((a,b)=>
+    orderIndex(a.key)-orderIndex(b.key) ||
+    b.total-a.total ||
+    String(a.key).localeCompare(String(b.key))
+  );
   const head=`<thead><tr><th>${esc(label)}</th><th class="num">Update</th><th class="num">No Update</th><th class="num">Total</th><th class="num">Update Rate</th></tr></thead>`;
   if(!rows.length){
     $(tableId).innerHTML=head+`<tbody><tr><td colspan="5"><div class="empty">Tidak ada data.</div></td></tr></tbody>`;
@@ -737,7 +791,9 @@ function exportCsv(){
   const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
-  a.download=`location_${$("dateFilter").value}_${$("startTime").value.replace(":","")}-${$("endTime").value.replace(":","")}.csv`;
+  a.download=currentMode === "overall"
+    ? "location_total_stock_keseluruhan.csv"
+    : `location_${$("dateFilter").value}_${$("startTime").value.replace(":","")}-${$("endTime").value.replace(":","")}.csv`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
@@ -923,6 +979,8 @@ class SimpleZip{
 
 $("applyBtn").addEventListener("click",applyFilters);
 $("resetBtn").addEventListener("click",resetFilters);
+$("modeFilteredBtn").addEventListener("click",()=>setMode("filtered"));
+$("modeOverallBtn").addEventListener("click",()=>setMode("overall"));
 $("searchInput").addEventListener("input",applySearch);
 $("fileInput").addEventListener("change",e=>handleUpload(e.target.files[0]));
 $("exportBtn").addEventListener("click",exportCsv);
@@ -933,7 +991,7 @@ $("nextPage").addEventListener("click",()=>{currentPage++;renderDetail();});
 allData=fromEmbedded();
 $("sourcePill").textContent=`${INITIAL_SOURCE} • ${fmt.format(allData.length)} baris`;
 setDateBounds();
-applyFilters();
+setMode("filtered");
 </script>
 </body>
 </html>
