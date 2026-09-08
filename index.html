@@ -150,10 +150,11 @@ footer{text-align:center;color:#94a3b8;font-size:11px;margin-top:20px}
 .role-badge.gate{background:#ede9fe;color:#6d28d9}
 .role-badge.mixed{background:#ffedd5;color:#b45309}
 .role-badge.system{background:#e2e8f0;color:#475569}
-.op-table th{cursor:pointer;user-select:none;white-space:nowrap}
-.op-table th:hover{background:#e8f0f9}
-.op-table th.sorted:after{content:"▾";margin-left:4px;font-size:9px}
-.op-table th.sorted.asc:after{content:"▴"}
+.op-table th,th.sortable-th{cursor:pointer;user-select:none;white-space:nowrap;position:relative}
+.op-table th:hover,th.sortable-th:hover{background:#e8f0f9}
+.op-table th.sorted:after,th.sortable-th.sorted:after{content:"▾";margin-left:4px;font-size:9px}
+.op-table th.sorted.asc:after,th.sortable-th.sorted.asc:after{content:"▴"}
+th.sortable-th:not(.sorted):hover:after{content:"⇅";margin-left:4px;font-size:9px;opacity:.45}
 .op-table tbody tr{cursor:pointer}
 .op-table tbody tr.active td{background:#eff6ff}
 .op-name{font-weight:850}
@@ -840,7 +841,19 @@ function stackingStats(rows=eligibleData){const map=new Map();for(const r of row
 
 let ANALYSIS_NOW=new Date();
 function normalizeRecord(raw){const rec={...raw};for(const c of CONFIG[currentType].columns)if(rec[c]===undefined)rec[c]='';rec._date=parseDateValue(rec['Dtm IN']);rec._sizeType=`${String(rec.Size??'').trim()} ${String(rec.Type??'').trim()}`.trim()||'(Blank)';Object.assign(rec,derivePlacement(rec,ANALYSIS_NOW));rec._updated=rec._placement===PLACEMENT.SLOT;rec._owner=rec._placement===PLACEMENT.SLOT?(rec._slotBy||'Nama Tidak Tersedia'):rec._placement===PLACEMENT.BLOCK?(rec._blockBy||'Nama Tidak Tersedia'):'Belum Ada Lokasi';rec['Stacking Name']=rec._owner;rec._stacker=rec._owner;const durationNum=Number(String(rec.Duration??'').replace(',','.'));rec._duration=Number.isFinite(durationNum)?durationNum:null;const totalLossRaw=String(rec['Total Loss']??'').trim();rec._isTotalLoss=currentType==='premium'&&/^checked$/i.test(totalLossRaw);rec._depot=currentType==='tps'?depotFromRemark(rec['Remark IN']):'';rec._tpsSite=currentType==='tps'?tpsSiteFromRemark(rec['Remark IN']):'';rec._teu=currentType==='tps'?tpsTeuFromSize(rec.Size):0;return rec}
-function rowsToRecords(payload){return payload.rows.map(row=>{const obj={};payload.columns.forEach((c,i)=>obj[c]=row[i]??'');return normalizeRecord(obj)}).filter(r=>Object.values(r).some(v=>String(v??'').trim()!==''))}
+/* Stock exports end with a count/total footer row (Cont holds the row count and
+   every other field is blank). It is not a container -- counting it inflates the
+   stock by one and lands in "Belum Ada Lokasi" because it has no location. */
+function isRealContainerRow(rec){
+  const cont=String(rec.Cont??'').trim();
+  if(!cont)return false;
+  if(!/[A-Za-z]/.test(cont))return false;              /* "6997" = footer count */
+  return true}
+function rowsToRecords(payload){
+  return payload.rows.map(row=>{const obj={};payload.columns.forEach((c,i)=>obj[c]=row[i]??'');return obj})
+    .filter(isRealContainerRow)
+    .map(normalizeRecord)
+    .filter(r=>Object.values(r).some(v=>String(v??'').trim()!==''))}
 function setMessage(text,type=''){const el=$('message');el.textContent=text;el.className=`message ${type}`;if(text)setTimeout(()=>{if(el.textContent===text)el.textContent=''},6500)}
 function summarize(rows){let updated=0;for(const r of rows)if(r._updated)updated++;const total=rows.length,noUpdate=total-updated,rate=total?updated/total*100:0;return{total,updated,noUpdate,rate}}
 
@@ -1090,8 +1103,90 @@ function operatorRoleMap(rows){
   if(_roleMapCache&&_roleMapSrc===rows)return _roleMapCache;
   const m=new Map();for(const o of operatorStats(rows))m.set(o.name,o.role);
   _roleMapSrc=rows;_roleMapCache=m;return m}
+/* ================= GENERIC COLUMN SORTING =================
+   Two strategies on purpose:
+   - Tables that render every row -> sort the DOM rows in place.
+   - Tables that are sliced or paginated (per-stacker Top N, Detail Container)
+     -> sort the underlying data and re-render, otherwise a click would only
+        reorder the visible page and quietly misrepresent the ranking. */
+const domSortState={};
+const DOM_SORT_TABLES=['blockTable','orphanTable','ownerTable','sizeTypeTable',
+  'conditionTable','gradeTable','actInTable','externalTable','urateTypeGradeTable'];
+
+/* Counts render as id-ID (1.054 = one thousand) while percentages use a dot
+   decimal (64.3%). Parse both without confusing one for the other. */
+function parseCellNum(raw){
+  const t=String(raw??'').replace(/ /g,' ').replace(/\s+/g,' ').trim();
+  if(!t||/^[—–-]$/.test(t))return null;
+  let m=t.match(/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(?::\d{2})?/);
+  if(m)return Date.parse(m[0].replace(' ','T'))||null;
+  m=t.match(/^(-?\d+(?:\.\d{1,2})?)\s*%/);          /* 64.3%  */
+  if(m)return parseFloat(m[1]);
+  m=t.match(/^-?\d{1,3}(?:\.\d{3})+(?![\d.])/);      /* 1.054  */
+  if(m)return parseFloat(m[0].replace(/\./g,''));
+  m=t.match(/^-?\d+(?:\.\d+)?/);                     /* 840, 151 hr */
+  if(m)return parseFloat(m[0]);
+  return null;
+}
+function markSorted(tbl,idx,dir){
+  if(!tbl.tHead||!tbl.tHead.rows.length)return;
+  [...tbl.tHead.rows[tbl.tHead.rows.length-1].cells].forEach((th,i)=>{
+    th.classList.add('sortable-th');
+    th.classList.toggle('sorted',i===idx);
+    th.classList.toggle('asc',i===idx&&dir===1)})}
+function domSortTable(tbl){
+  if(!tbl||!tbl.tHead||!tbl.tBodies.length)return;
+  const st=domSortState[tbl.id];
+  if(!st){markSorted(tbl,-1,0);return}
+  const tb=tbl.tBodies[0],
+    rows=[...tb.rows].filter(r=>r.cells.length>st.idx&&!r.querySelector('.empty'));
+  if(rows.length>1){
+    const vals=rows.map(r=>{const c=r.cells[st.idx];
+      return{r,t:c.textContent.trim(),n:parseCellNum(c.textContent)}});
+    const numeric=vals.every(v=>v.n!==null||!v.t||/^[—–-]$/.test(v.t));
+    vals.sort((a,b)=>{
+      if(numeric){
+        if(a.n===null&&b.n===null)return 0;
+        if(a.n===null)return 1; if(b.n===null)return-1;   /* blanks always last */
+        return(a.n-b.n)*st.dir}
+      return a.t.localeCompare(b.t,'id')*st.dir});
+    vals.forEach(v=>tb.appendChild(v.r))}
+  markSorted(tbl,st.idx,st.dir)}
+function bindDomSort(tbl){
+  if(!tbl||!tbl.tHead||!tbl.tHead.rows.length)return;
+  const hr=tbl.tHead.rows[tbl.tHead.rows.length-1];
+  [...hr.cells].forEach((th,i)=>{
+    th.classList.add('sortable-th');
+    th.onclick=()=>{const cur=domSortState[tbl.id];
+      domSortState[tbl.id]=(cur&&cur.idx===i)?{idx:i,dir:-cur.dir}:{idx:i,dir:i===0?1:-1};
+      domSortTable(tbl)}})}
+function refreshSorts(){
+  const tg=document.querySelector('#urateTypeGradeBody table');
+  if(tg&&!tg.id)tg.id='urateTypeGradeTable';
+  for(const id of DOM_SORT_TABLES){const t=document.getElementById(id);
+    if(t){bindDomSort(t);domSortTable(t)}}}
 /* ================= UPDATE RATE TAB ================= */
 let urateSelected='';
+let urateSortKey='updateRate',urateSortDir=1;
+let detailSortKey='',detailSortDir=1;
+/* Detail Container is paginated, so sorting must happen on the data behind all
+   140 pages -- not on the 50 rows currently in the DOM. */
+const DETAIL_SORT={
+  status:r=>r._placement, owner:r=>String(r.Owner||''), cont:r=>String(r.Cont||''),
+  sizetype:r=>r._sizeType, condition:r=>String(r.Condition||''), grade:r=>String(r.Grade||''),
+  actin:r=>String(r['Act IN']||''), dtm:r=>r._date?+r._date:null, duration:r=>r._duration,
+  ageing:r=>r._duration, ttl:r=>r._isTotalLoss?1:0, location:r=>String(r.Location||''),
+  remark:r=>String(r['Remark IN']||''), stacker:r=>String(r._owner||''),
+  pending:r=>r._pendingDays, move:r=>r._eventCount};
+function sortDetailData(){
+  if(!detailSortKey||!DETAIL_SORT[detailSortKey])return;
+  const f=DETAIL_SORT[detailSortKey],d=detailSortDir;
+  detailData.sort((a,b)=>{const av=f(a),bv=f(b);
+    if(typeof av==='string'||typeof bv==='string')
+      return String(av).localeCompare(String(bv),'id')*d;
+    if(av==null&&bv==null)return 0;
+    if(av==null)return 1; if(bv==null)return-1;
+    return(av-bv)*d})}
 let accDeepOpen=false;
 function syncDeepDive(){
   document.querySelectorAll('.deepdive').forEach(el=>el.classList.toggle('hidden',!(currentMode==='updaterate'&&accDeepOpen)));
@@ -1126,11 +1221,22 @@ function renderUrateStacker(){
     q=$('urateSearch').value.trim().toLowerCase();
   let list=all.filter(o=>o.events>=minMoves);
   if(q)list=list.filter(o=>o.name.includes(q));
-  list.sort((a,b)=>a.updateRate-b.updateRate||b.events-a.events||a.name.localeCompare(b.name));
+  const uDir=urateSortDir;
+  list.sort((a,b)=>{
+    const av=a[urateSortKey],bv=b[urateSortKey];
+    if(typeof av==='string'||typeof bv==='string')
+      return String(av??'').localeCompare(String(bv??''),'id')*uDir;
+    const an=av instanceof Date?+av:av,bn=bv instanceof Date?+bv:bv;
+    if(an==null&&bn==null)return 0;
+    if(an==null)return 1; if(bn==null)return-1;      /* blanks last either way */
+    return(an-bn)*uDir||b.events-a.events});
   const limitRaw=$('urateLimit').value,shown=limitRaw==='ALL'?list:list.slice(0,Number(limitRaw)||25);
   const below=list.filter(o=>o.updateRate<100).length;
   $('urateStackerSub').innerHTML=`Diurutkan dari update rate terendah • <b>${fmt.format(list.length)} stacker</b> ditampilkan • <b class="${below?'pill-bad':'pill-ok'}">${fmt.format(below)}</b> belum 100%. Klik baris untuk memfilter Detail Container.`;
-  const head='<thead><tr><th>Stacker</th><th class="num">Update Rate</th><th class="num">Total Update</th><th class="num">Lengkap</th><th class="num">Belum Lengkap</th><th class="num">Container Dipegang</th><th class="num">Aktivitas Terakhir</th></tr></thead>';
+  const uCols=[['name','Stacker',''],['updateRate','Update Rate','num'],['events','Total Update','num'],
+    ['slotEvents','Lengkap','num'],['noUpdate','Belum Lengkap','num'],
+    ['holdsNow','Container Dipegang','num'],['lastSeen','Aktivitas Terakhir','num']];
+  const head=`<thead><tr>${uCols.map(([k,label,cls])=>`<th class="${cls} sortable-th${urateSortKey===k?' sorted'+(urateSortDir===1?' asc':''):''}" data-usort="${k}">${label}</th>`).join('')}</tr></thead>`;
   $('urateStackerTable').innerHTML=head+(shown.length
     ?`<tbody>${shown.map(o=>{const bad=o.updateRate<50,mid=o.updateRate<90;
       return`<tr data-urate-op="${esc(o.name)}" class="${urateSelected===o.name?'active':''}">
@@ -1142,6 +1248,11 @@ function renderUrateStacker(){
       <td class="num">${fmt.format(o.holdsNow)}</td>
       <td class="num">${o.lastSeen?esc(formatDateTime(o.lastSeen)):'—'}</td></tr>`}).join('')}</tbody>`
     :'<tbody><tr><td colspan="7"><div class="empty">Tidak ada stacker sesuai filter.</div></td></tr></tbody>');
+  $('urateStackerTable').querySelectorAll('[data-usort]').forEach(th=>th.addEventListener('click',()=>{
+    const k=th.dataset.usort;
+    if(urateSortKey===k)urateSortDir=-urateSortDir;
+    else{urateSortKey=k;urateSortDir=(k==='name'||k==='updateRate')?1:-1}
+    renderUrateStacker()}));
   $('urateStackerTable').querySelectorAll('[data-urate-op]').forEach(tr=>tr.addEventListener('click',()=>{
     urateSelected=urateSelected===tr.dataset.urateOp?'':tr.dataset.urateOp;
     accSelectedOperator=urateSelected;
@@ -1200,8 +1311,8 @@ function renderUrateTypeGrade(){
 
 function renderUpdateRateTab(){
   if(currentMode!=='updaterate')return;
-  renderUrateOverall();renderUrateStacker();renderUrateTypeGrade()}
-function renderStackingPerformance(){_roleMapCache=null;renderAccuracy();renderOperatorPerformance()}
+  renderUrateOverall();renderUrateStacker();renderUrateTypeGrade();refreshSorts()}
+function renderStackingPerformance(){_roleMapCache=null;renderAccuracy();renderOperatorPerformance();refreshSorts()}
 function renderAll(){const s=summarize(eligibleData);$('kpiTotal').textContent=fmt.format(periodData.length);$('kpiEligible').textContent=fmt.format(eligibleData.length);{const c3=completenessStats(eligibleData);
   $('kpiUpdated').textContent=fmt.format(c3.slotted);
   $('kpiNoUpdate').textContent=fmt.format(c3.never);
@@ -1224,7 +1335,14 @@ function applyDetailFilters(){const q=$('searchInput').value.trim().toLowerCase(
     if(accAgeFilter!=null&&!(r._placement===PLACEMENT.BLOCK&&Number.isFinite(r._pendingDays)&&r._pendingDays>accAgeFilter))return false;
     if(accSelectedOperator&&!(r._events||[]).some(e=>e.user===accSelectedOperator))return false;
     if(owner!=='ALL'&&String(r.Owner||'(Blank)')!==owner)return false;if(size!=='ALL'&&r._sizeType!==size)return false;if(cond!=='ALL'&&String(r.Condition||'(Blank)')!==cond)return false;if(grade!=='ALL'&&String(r.Grade||'(Blank)')!==grade)return false;if(stacking!=='ALL'&&r._owner!==stacking)return false;if(q&&!Object.values({o:r.Owner,c:r.Cont,s:r._sizeType,co:r.Condition,g:r.Grade,l:r.Location,a:r['Act IN'],rm:r['Remark IN'],st:r._stacker}).some(v=>String(v??'').toLowerCase().includes(q)))return false;return true});currentPage=1;renderDetail();renderStackingPerformance()}
-function renderDetail(){const totalPages=Math.max(1,Math.ceil(detailData.length/PAGE_SIZE));currentPage=Math.min(Math.max(1,currentPage),totalPages);const start=(currentPage-1)*PAGE_SIZE,page=detailData.slice(start,start+PAGE_SIZE),remark=currentType==='tps'?'<th>Remark IN</th>':'',ageing=currentType==='premium'?'<th>Ageing Group</th><th>Total Loss</th>':'',head=`<thead><tr><th>Status Lokasi</th><th>Owner</th><th>Container</th><th>Size Type</th><th>Condition</th><th>Grade</th><th>Act IN</th><th>Dtm IN</th><th class="num">Duration</th>${ageing}<th>Location</th>${remark}<th>Stacker</th><th class="num">Umur Pending</th><th class="num">Move</th></tr></thead>`;const colCount=(currentType==='premium'?13:12)+2;if(!page.length)$('detailTable').innerHTML=head+`<tbody><tr><td colspan="${colCount}"><div class="empty">Tidak ada data sesuai filter.</div></td></tr></tbody>`;else $('detailTable').innerHTML=head+`<tbody>${page.map(r=>`<tr><td><span class="plc-badge ${plcClass(r._placement)}">${esc(PLACEMENT_LABEL[r._placement]||r._placement)}</span></td><td>${esc(r.Owner||'-')}</td><td><b>${esc(r.Cont||'-')}</b></td><td>${esc(r._sizeType)}</td><td>${esc(r.Condition||'-')}</td><td>${esc(r.Grade||'-')}</td><td>${esc(r['Act IN']||'-')}</td><td>${esc(formatDateTime(r._date))}</td><td class="num">${Number.isFinite(r._duration)?esc(r._duration):'-'}</td>${currentType==='premium'?`<td>${esc(ageingGroup(r))}</td><td>${r._isTotalLoss?'<span class="ageing-badge">Checked</span>':'-'}</td>`:''}<td>${r.Location?esc(r.Location):'<span class="location-empty">Blank</span>'}</td>${currentType==='tps'?`<td>${esc(r['Remark IN']||'-')}</td>`:''}<td><b>${esc(r._owner||'—')}</b></td><td class="num">${r._placement===PLACEMENT.BLOCK?`<span class="${(r._pendingDays??0)>30?'pill-bad':(r._pendingDays??0)>7?'pill-warn':''}">${fmtDays(r._pendingDays)}</span>`:'—'}</td><td class="num">${fmt.format(r._eventCount||0)}</td></tr>`).join('')}</tbody>`;$('detailCount').textContent=`${fmt.format(detailData.length)} baris dari ${fmt.format(eligibleData.length)} stock yang dinilai`;$('pageInfo').textContent=`Halaman ${currentPage} dari ${totalPages} • baris ${detailData.length?start+1:0}–${Math.min(start+PAGE_SIZE,detailData.length)}`;$('prevPage').disabled=currentPage<=1;$('nextPage').disabled=currentPage>=totalPages}
+function renderDetail(){sortDetailData();const totalPages=Math.max(1,Math.ceil(detailData.length/PAGE_SIZE));currentPage=Math.min(Math.max(1,currentPage),totalPages);const start=(currentPage-1)*PAGE_SIZE,page=detailData.slice(start,start+PAGE_SIZE),dth=(k,label,cls)=>`<th class="${cls||''} sortable-th${detailSortKey===k?' sorted'+(detailSortDir===1?' asc':''):''}" data-dsort="${k}">${label}</th>`,
+    head=`<thead><tr>${dth('status','Status Lokasi')}${dth('owner','Owner')}${dth('cont','Container')}${dth('sizetype','Size Type')}${dth('condition','Condition')}${dth('grade','Grade')}${dth('actin','Act IN')}${dth('dtm','Dtm IN')}${dth('duration','Duration','num')}${currentType==='premium'?dth('ageing','Ageing Group')+dth('ttl','Total Loss'):''}${dth('location','Location')}${currentType==='tps'?dth('remark','Remark IN'):''}${dth('stacker','Stacker')}${dth('pending','Umur Pending','num')}${dth('move','Move','num')}</tr></thead>`;const colCount=(currentType==='premium'?13:12)+2;if(!page.length)$('detailTable').innerHTML=head+`<tbody><tr><td colspan="${colCount}"><div class="empty">Tidak ada data sesuai filter.</div></td></tr></tbody>`;else $('detailTable').innerHTML=head+`<tbody>${page.map(r=>`<tr><td><span class="plc-badge ${plcClass(r._placement)}">${esc(PLACEMENT_LABEL[r._placement]||r._placement)}</span></td><td>${esc(r.Owner||'-')}</td><td><b>${esc(r.Cont||'-')}</b></td><td>${esc(r._sizeType)}</td><td>${esc(r.Condition||'-')}</td><td>${esc(r.Grade||'-')}</td><td>${esc(r['Act IN']||'-')}</td><td>${esc(formatDateTime(r._date))}</td><td class="num">${Number.isFinite(r._duration)?esc(r._duration):'-'}</td>${currentType==='premium'?`<td>${esc(ageingGroup(r))}</td><td>${r._isTotalLoss?'<span class="ageing-badge">Checked</span>':'-'}</td>`:''}<td>${r.Location?esc(r.Location):'<span class="location-empty">Blank</span>'}</td>${currentType==='tps'?`<td>${esc(r['Remark IN']||'-')}</td>`:''}<td><b>${esc(r._owner||'—')}</b></td><td class="num">${r._placement===PLACEMENT.BLOCK?`<span class="${(r._pendingDays??0)>30?'pill-bad':(r._pendingDays??0)>7?'pill-warn':''}">${fmtDays(r._pendingDays)}</span>`:'—'}</td><td class="num">${fmt.format(r._eventCount||0)}</td></tr>`).join('')}</tbody>`;$('detailCount').textContent=`${fmt.format(detailData.length)} baris dari ${fmt.format(eligibleData.length)} stock yang dinilai`;$('pageInfo').textContent=`Halaman ${currentPage} dari ${totalPages} • baris ${detailData.length?start+1:0}–${Math.min(start+PAGE_SIZE,detailData.length)}`;$('prevPage').disabled=currentPage<=1;$('nextPage').disabled=currentPage>=totalPages;
+  $('detailTable').querySelectorAll('[data-dsort]').forEach(th=>th.addEventListener('click',()=>{
+    const k=th.dataset.dsort;
+    if(detailSortKey===k)detailSortDir=-detailSortDir;
+    else{detailSortKey=k;detailSortDir=['cont','owner','stacker','location','sizetype','condition','grade','actin','status'].includes(k)?1:-1}
+    currentPage=1;renderDetail()}));
+  refreshSorts()}
 async function handleUpload(file){if(!file)return;try{setMessage(`Membaca ${file.name}…`);const parsed=await parseXlsx(await file.arrayBuffer(),currentType),value={type:currentType,source:file.name,columns:parsed.columns,rows:parsed.rows,savedAt:new Date().toISOString()};await storageSet(value);currentSource=file.name;allData=rowsToRecords(value);$('sourcePill').textContent=`${file.name} • ${fmt.format(allData.length)} baris • cache lokal`;setDefaultRange();setMode('updaterate',false);applyFilters();refreshHomeMetadata();const cloudSent=await pushDatasetToCloud(value);setMessage(`${file.name} berhasil dibaca dan disimpan lokal${cloudSent?' serta dikirim ke Google Sheets':''}.`, 'ok');$('fileInput').value=''}catch(err){console.error(err);setMessage(`Gagal membaca Excel: ${err.message}`,'error')}}
 async function restoreDefault(){if(!currentType)return;await storageDelete(currentType);await loadCurrentDataset(true);refreshHomeMetadata();setMessage(`Data ${CONFIG[currentType].name} dikembalikan ke data awal yang tertanam di HTML.`,'ok')}
 
