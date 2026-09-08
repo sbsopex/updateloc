@@ -181,6 +181,105 @@ footer{text-align:center;color:#94a3b8;font-size:11px;margin-top:20px}
 .dm-only.hidden{display:none!important}
 @media(max-width:1120px){.dm-breakdown-grid{grid-template-columns:1fr}.dm-ratio-summary{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.dm-ratio-summary{grid-template-columns:1fr}}
+/* ===== V10.1 COMPACT DENSITY PASS ===== */
+main{padding:16px 20px 30px}
+.panel{border-radius:14px}
+.kpi-grid{gap:10px;margin:12px 0}
+.kpi{padding:12px 14px}
+.kpi-value{font-size:23px;margin-top:6px}
+.kpi-label{font-size:10px}
+.kpi-sub{font-size:10px;margin-top:5px}
+.kpi:after{width:64px;height:64px;right:-18px;top:-22px}
+.dashboard-grid{gap:12px;margin-bottom:12px}
+.chart-card,.table-card,.detail-card,.matrix-card,.acc-section,.stacking-section{padding:14px}
+.section-title{font-size:15px}
+.section-sub{font-size:11px;margin-top:3px}
+.table-head{margin-bottom:9px}
+.pie-layout{min-height:0;gap:12px}
+.pie{width:min(148px,100%)}
+.pie-center strong{font-size:20px}
+.pie-center span{font-size:10px}
+.legend{gap:8px}
+.legend-item{padding:9px 11px;border-radius:11px}
+.legend-count{font-size:17px}
+.legend-pct{font-size:11px;margin-top:3px}
+th{padding:7px 9px;font-size:9px}
+td{padding:5px 9px;font-size:11.5px}
+.scroll-table{border-radius:10px}
+.rate-bar{height:5px;margin-top:3px}
+.breakdown-grid,.acc-grid{gap:12px;margin-bottom:12px}
+.matrix-card{margin-bottom:12px}
+.filters{padding:14px}
+.mode-tabs{margin-bottom:11px;padding-bottom:10px}
+.filter-grid{gap:9px}
+label{font-size:11px;margin-bottom:5px}
+input[type="datetime-local"],input[type="search"],select{padding:8px 10px;min-height:38px;border-radius:9px}
+.detail-filter-grid{gap:8px;margin-bottom:10px}
+.acc-section{margin-bottom:12px}
+
+/* accuracy strip: dense inline stats instead of tall cards */
+.acc-strip{grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:10px 0}
+.acc-strip-slim{grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr)}
+.kpi-grid{grid-template-columns:repeat(auto-fit,minmax(155px,1fr))}
+.acc-card{padding:10px 12px;border-radius:11px}
+.acc-value{font-size:21px;margin-top:5px}
+.acc-label{font-size:9px}
+.acc-sub{font-size:10px;margin-top:5px;line-height:1.45}
+.bar-card{background:#fff;border-color:var(--line)}
+.stackbar{display:flex;height:12px;border-radius:99px;overflow:hidden;margin-top:8px;box-shadow:inset 0 0 0 1px rgba(15,39,71,.05)}
+.sb{height:100%}.sb-slot{background:var(--green)}.sb-block{background:var(--amber)}.sb-none{background:var(--red)}
+.k{display:inline-block;width:7px;height:7px;border-radius:50%;margin:0 3px 0 6px}
+.k-slot{background:var(--green)}.k-block{background:var(--amber)}.k-none{background:var(--red)}
+.acc-help{margin:0 0 10px}
+.acc-help summary{cursor:pointer;font-size:11px;font-weight:800;color:var(--blue);padding:5px 0;list-style:none}
+.acc-help summary::-webkit-details-marker{display:none}
+.acc-help summary:before{content:"▸ ";font-size:10px}
+.acc-help[open] summary:before{content:"▾ "}
+.acc-help .acc-note{margin:6px 0 0}
+.age-row{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.age-title{font-size:11px;font-weight:850;color:#334155;white-space:nowrap}
+.age-chips{margin:0;gap:6px}
+.age-chip{padding:6px 10px;min-width:0;border-radius:9px}
+.age-chip b{font-size:15px}
+.age-chip span{font-size:9px}
+
+/* operator table: dense rows, no inline bars */
+.role-tabs{margin-bottom:10px;padding-bottom:9px;gap:6px}
+.role-tab{min-height:31px;padding:6px 11px;font-size:11.5px}
+.op-table td{padding:4px 9px;line-height:1.35}
+.op-table .op-name{font-size:12px}
+.qual{display:inline-block;min-width:30px;padding:2px 7px;border-radius:7px;font-weight:900;font-size:12px}
+.q-ok{background:var(--green-soft);color:#147a36}
+.q-mid{background:var(--amber-soft);color:#b45309}
+.q-bad{background:var(--red-soft);color:#b91c1c}
+.q-na{background:#f1f5f9;color:#94a3b8;font-weight:800}
+.f-small{background:#f1f5f9;color:#64748b}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;font-weight:800}
+.flagcell{white-space:normal;line-height:1.65;width:100%;min-width:210px}
+/* numeric columns hug their content so the findings column absorbs the slack */
+.op-table td.num,.op-table th.num{width:1%;white-space:nowrap}
+.op-table td:first-child,.op-table th:first-child{width:1%;white-space:nowrap}
+.flag{display:inline-block;padding:2px 7px;border-radius:999px;font-size:9.5px;font-weight:850;margin:1px 3px 1px 0;white-space:nowrap;cursor:help}
+.f-rework{background:#fee2e2;color:#b91c1c}
+.f-nonstd{background:#ffedd5;color:#b45309}
+.f-dormant{background:#e2e8f0;color:#475569}
+.f-volume{background:#e0f2fe;color:#0369a1}
+.f-backlog{background:#ede9fe;color:#6d28d9}
+.f-ok{background:var(--green-soft);color:#147a36}
+.sub2{display:block;font-size:9px;color:var(--muted);font-weight:700;margin-top:1px}
+.review-btn.active{background:var(--navy);color:#fff}
+.find-list{display:grid;gap:6px;margin-bottom:11px}
+.find{display:flex;gap:9px;align-items:baseline;font-size:11.5px;color:#475569;line-height:1.5}
+.find .flag{flex:0 0 auto}
+.drill{padding:13px;margin-top:11px}
+.drill-metrics{gap:8px;margin-bottom:10px;grid-template-columns:repeat(auto-fit,minmax(108px,1fr))}
+.drill-metric{padding:8px 10px}
+.drill-metric b{font-size:15px;margin-top:4px}
+.drill-title{font-size:15px}
+.acc-note{padding:9px 11px;font-size:10.5px;line-height:1.6}
+footer{margin-top:14px}
+@media(max-width:1180px){.acc-strip{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.acc-strip{grid-template-columns:repeat(2,1fr)}.flagcell{max-width:none}}
 </style>
 </head>
 <body>
@@ -236,7 +335,8 @@ footer{text-align:center;color:#94a3b8;font-size:11px;margin-top:20px}
       <div class="panel kpi"><div class="kpi-label" id="totalLabel">Total Stock</div><div class="kpi-value" id="kpiTotal">0</div><div class="kpi-sub" id="kpiPeriod">—</div></div>
       <div class="panel kpi" id="eligibleCard"><div class="kpi-label">Stock Dinilai Lokasinya</div><div class="kpi-value" id="kpiEligible">0</div><div class="kpi-sub">Di luar SIL, KCN, dan DWI</div></div>
       <div class="panel kpi update"><div class="kpi-label">Slot Lengkap</div><div class="kpi-value" id="kpiUpdated">0</div><div class="kpi-sub" id="kpiUpdatedSub">0% dari total</div></div>
-      <div class="panel kpi no-update"><div class="kpi-label">Belum Lengkap</div><div class="kpi-value" id="kpiNoUpdate">0</div><div class="kpi-sub" id="kpiNoUpdateSub">0% dari total</div></div>
+      <div class="panel kpi"><div class="kpi-label">Blok Saja</div><div class="kpi-value" id="kpiBlockOnly" style="color:var(--amber)">0</div><div class="kpi-sub" id="kpiBlockOnlySub">—</div></div>
+      <div class="panel kpi no-update"><div class="kpi-label">Belum Ada Lokasi</div><div class="kpi-value" id="kpiNoUpdate">0</div><div class="kpi-sub" id="kpiNoUpdateSub">0% dari total</div></div>
       <div class="panel kpi"><div class="kpi-label">Location Completeness</div><div class="kpi-value" id="kpiRate">0%</div><div class="kpi-sub" id="kpiRateSub">Slot lengkap / total dinilai</div></div>
     </section>
 
@@ -338,10 +438,9 @@ footer{text-align:center;color:#94a3b8;font-size:11px;margin-top:20px}
           <button class="btn btn-ghost btn-small" id="resetAccBtn" type="button">Reset Filter Akurasi</button>
         </div>
       </div>
-      <div class="acc-strip" id="accStrip"></div>
-      <div class="acc-note" id="accNote"></div>
-      <div class="section-sub" style="font-weight:850;color:#334155;margin-bottom:9px">Umur Container Berstatus <b>Blok Saja</b> (sudah ditentukan blok, belum di-slot)</div>
-      <div class="age-chips" id="ageChips"></div>
+      <div class="acc-strip acc-strip-slim" id="accStrip"></div>
+      <details class="acc-help"><summary>Cara baca &amp; batasan metrik</summary><div class="acc-note" id="accNote"></div></details>
+      <div class="age-row"><span class="age-title">Umur <b>Blok Saja</b></span><div class="age-chips" id="ageChips"></div></div>
     </section>
 
     <section class="panel acc-section location-only" id="operatorSection">
@@ -354,6 +453,7 @@ footer{text-align:center;color:#94a3b8;font-size:11px;margin-top:20px}
         <div class="acc-toolbar">
           <div><label>Cari Operator</label><input type="search" id="operatorSearch" placeholder="Nama operator…"></div>
           <div><label>Tampilkan</label><select id="operatorLimit"><option value="20">Top 20</option><option value="50">Top 50</option><option value="ALL">Semua</option></select></div>
+          <button class="btn btn-ghost btn-small review-btn" id="reviewOnlyBtn" type="button">Hanya Perlu Ditinjau</button>
         </div>
       </div>
       <div class="role-tabs" id="roleTabs"></div>
@@ -422,6 +522,14 @@ const ROLE={STACKER:'Stacker',GATE:'Gate / Receiving',MIXED:'Mixed',SYSTEM:'Syst
 const SYSTEM_ACCOUNT_RE=/^(?:edi[_.\-]?sender|system|auto|edi)$/i;
 const STACKER_THRESHOLD=0.8,GATE_THRESHOLD=0.2;
 const PENDING_BUCKETS=[1,3,7,30,90];
+/* A slot entry replaced by another slot entry inside this window is a correction,
+   not a physical move: median observed gap is ~26 minutes. */
+const REWORK_WINDOW_H=6;
+/* Thresholds that raise a review flag on a stacker. */
+const FLAG={rework:5,nonStd:2,dormantDays:14,lowVolumeRatio:0.5};
+/* Rate-based flags need enough events to mean anything. One bad entry out of one
+   is 100% and tells you nothing — those operators are shown but not ranked. */
+const MIN_SAMPLE=20;
 const MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
 
 function classifyLocation(v){const loc=String(v??'').replace(/ /g,' ').trim();
@@ -515,11 +623,24 @@ function medianOf(list){if(!list.length)return null;
 function operatorStats(rows){
   const map=new Map(),get=n=>{if(!map.has(n))map.set(n,{name:n,events:0,slotEvents:0,blockEvents:0,
     otherEvents:0,holdsSlot:0,holdsBlock:0,assignedResolved:0,assignedPending:0,pendingDays:[],
-    handoffHours:[],nonStandard:0,firstTouch:0,lastSeen:null,containers:[]});return map.get(n)};
+    handoffHours:[],nonStandard:0,firstTouch:0,lastSeen:null,containers:[],
+    rework:0,reworkSelf:0,reworkByOther:0,reworkCases:[]});return map.get(n)};
   for(const r of rows){
     const seen=new Set();
-    for(const e of (r._events||[])){
+    const ev=r._events||[];
+    for(let i=0;i<ev.length;i++){
+      const e=ev[i];
       if(!e.user)continue;const o=get(e.user);o.events++;
+      /* did this operator's slot entry get re-slotted almost immediately? */
+      if(e.kind===PLACEMENT.SLOT&&i<ev.length-1){
+        const nx=ev[i+1];
+        if(nx.kind===PLACEMENT.SLOT&&e.ts&&nx.ts&&(nx.ts-e.ts)/3600000<REWORK_WINDOW_H){
+          o.rework++;
+          if(nx.user&&nx.user!==e.user)o.reworkByOther++;else o.reworkSelf++;
+          if(o.reworkCases.length<60)o.reworkCases.push({cont:r.Cont,from:e.loc,to:nx.loc,
+            by:nx.user||'—',self:!nx.user||nx.user===e.user,mins:Math.round((nx.ts-e.ts)/60000),at:e.ts});
+        }
+      }
       if(e.kind===PLACEMENT.SLOT){o.slotEvents++;if(!e.standard)o.nonStandard++}
       else if(e.kind===PLACEMENT.BLOCK)o.blockEvents++;else o.otherEvents++;
       if(e.ts&&(!o.lastSeen||e.ts>o.lastSeen))o.lastSeen=e.ts;
@@ -545,7 +666,41 @@ function operatorStats(rows){
     o.pendingOver7=o.pendingDays.filter(d=>d>7).length;
     o.pendingOver30=o.pendingDays.filter(d=>d>30).length;
     o.holdsNow=o.holdsSlot+o.holdsBlock;
-    o.score=o.role===ROLE.GATE?o.clearRate:o.precision;
+    o.reworkRate=o.slotEvents?o.rework/o.slotEvents*100:0;
+    o.nonStdRate=o.slotEvents?o.nonStandard/o.slotEvents*100:0;
+    o.dormantDays=o.lastSeen?Math.max(0,Math.floor((ANALYSIS_NOW-o.lastSeen)/86400000)):null;
+    return o}).map((o,_,arr)=>{
+    /* volume is judged against peers doing the same role, not an absolute target */
+    const peers=arr.filter(x=>x.role===o.role&&x.events>0).map(x=>x.events).sort((a,b)=>a-b);
+    o.peerMedian=peers.length?peers[peers.length>>1]:0;
+    o.volumeRatio=o.peerMedian?o.events/o.peerMedian:null;
+    /* Screening flags -- reasons to look, never proof of fault. */
+    const flags=[];
+    o.smallSample=o.slotEvents<MIN_SAMPLE;
+    if(o.smallSample&&o.role!==ROLE.GATE)flags.push({k:'small',t:`Sampel kecil (${o.slotEvents})`,
+      d:`Di bawah ${MIN_SAMPLE} move slot — persentase tidak dapat diandalkan, tidak diberi skor`});
+    if(!o.smallSample&&o.reworkRate>=FLAG.rework)flags.push({k:'rework',t:`Rework ${o.reworkRate.toFixed(1)}%`,
+      d:'Entri slot-nya diganti lagi dalam <6 jam — indikasi salah ketik lokasi'});
+    if(!o.smallSample&&o.nonStdRate>=FLAG.nonStd)flags.push({k:'nonstd',t:`Kode aneh ${o.nonStdRate.toFixed(0)}%`,
+      d:'Memakai format kode lokasi non-standar'});
+    if(o.dormantDays!=null&&o.dormantDays>=FLAG.dormantDays)flags.push({k:'dormant',t:`Pasif ${o.dormantDays} hr`,
+      d:'Tidak ada aktivitas update lokasi — cek apakah akun masih dipakai'});
+    if(o.volumeRatio!=null&&o.volumeRatio<FLAG.lowVolumeRatio&&o.events>0)flags.push({k:'volume',t:`Volume ${Math.round(o.volumeRatio*100)}% median`,
+      d:'Jauh di bawah rekan seperan — cek pembagian shift/beban kerja'});
+    if(o.role===ROLE.GATE&&o.assignedPending&&o.clearRate!=null&&o.clearRate<50)
+      flags.push({k:'backlog',t:`Backlog ${o.assignedPending}`,d:'Lebih dari separuh blok yang ia tetapkan belum di-slot (metrik bersama dengan stacker)'});
+    o.flags=flags;
+    /* Screening rank, not a performance rating. Withheld below the sample floor. */
+    if(o.smallSample&&o.role!==ROLE.GATE)o.quality=null;
+    else{let q=100;
+      q-=Math.min(40,o.reworkRate*4);
+      q-=Math.min(30,o.nonStdRate*2);
+      if(o.dormantDays!=null)q-=Math.min(20,Math.max(0,o.dormantDays-FLAG.dormantDays)*0.7);
+      if(o.volumeRatio!=null&&o.volumeRatio<1)q-=Math.min(10,(1-o.volumeRatio)*12);
+      o.quality=Math.max(0,Math.round(q))}
+    /* "needs review" means a real, sample-backed finding -- a small sample is not one */
+    o.needsReview=flags.some(f=>f.k!=='small');
+    o.score=o.role===ROLE.GATE?o.clearRate:o.quality;
     return o}).sort((a,b)=>b.events-a.events||a.name.localeCompare(b.name))}
 
 function blockStats(rows){
@@ -651,7 +806,7 @@ function setDefaultRange(){const dates=allData.map(r=>r._date).filter(Boolean).s
 function setMode(mode,apply=true){if((mode==='ageing'||mode==='dmratio')&&currentType!=='premium')mode='overall';currentMode=mode;const range=mode==='range',ageing=mode==='ageing',dmratio=mode==='dmratio',overall=mode==='overall';$('modeRangeBtn').classList.toggle('active',range);$('modeOverallBtn').classList.toggle('active',overall);$('modeAgeingBtn').classList.toggle('active',ageing);$('modeDmRatioBtn').classList.toggle('active',dmratio);$('dateStartWrap').classList.toggle('hidden',ageing||dmratio);$('dateEndWrap').classList.toggle('hidden',ageing||dmratio);$('ageingControls').classList.toggle('hidden',!ageing||currentType!=='premium');$('ageingSection').classList.toggle('hidden',!ageing||currentType!=='premium');$('dmRatioSection').classList.toggle('hidden',!dmratio||currentType!=='premium');document.querySelectorAll('.location-only').forEach(el=>el.classList.toggle('hidden',dmratio));$('startDateTime').disabled=!range;$('endDateTime').disabled=!range;$('applyBtn').disabled=overall||dmratio;$('resetBtn').disabled=overall||dmratio;$('resetBtn').textContent=ageing?'Reset Duration':'Reset Range';$('modeHint').textContent=range?'Mulai termasuk, akhir tidak termasuk':ageing?'Filter fleksibel: minimum eksklusif, maksimum inklusif':dmratio?'DM Ratio menggunakan seluruh stock Premium saat ini':'Menampilkan semua tanggal dan jam Dtm IN';if(apply)applyFilters()}
 function applyFilters(){if(!currentType)return;if(currentMode==='overall'||currentMode==='dmratio')periodData=[...allData];else if(currentMode==='ageing'){const minRaw=$('durationMin').value.trim(),maxRaw=$('durationMax').value.trim(),min=minRaw===''?null:Number(minRaw),max=maxRaw===''?null:Number(maxRaw);if((min!==null&&!Number.isFinite(min))||(max!==null&&!Number.isFinite(max))){setMessage('Duration minimum/maksimum harus berupa angka.','error');return}if(min!==null&&max!==null&&max<=min){setMessage('Duration maksimum harus lebih besar dari minimum.','error');return}periodData=allData.filter(r=>Number.isFinite(r._duration)&&(min===null||r._duration>min)&&(max===null||r._duration<=max))}else{const start=new Date($('startDateTime').value),end=new Date($('endDateTime').value);if(Number.isNaN(start.getTime())||Number.isNaN(end.getTime())){setMessage('Pilih Start dan End Date & Hour.','error');return}if(start>=end){setMessage('End Date & Hour harus lebih besar dari Start.','error');return}periodData=allData.filter(r=>r._date&&r._date>=start&&r._date<end)}if(currentType==='tps'){externalData=periodData.filter(r=>r._depot);eligibleData=periodData.filter(r=>!r._depot)}else{externalData=[];eligibleData=[...periodData]}renderAll()}
 /* ---------- V10 renderers: accuracy + role-aware operator performance ---------- */
-let accRoleFilter='ALL', accSelectedOperator='', accAgeFilter=null, accSortKey='events', accSortDir='desc';
+let accRoleFilter='ALL', accSelectedOperator='', accAgeFilter=null, accSortKey='events', accSortDir='desc', accReviewOnly=false;
 function roleClass(role){return role===ROLE.STACKER?'stacker':role===ROLE.GATE?'gate':role===ROLE.SYSTEM?'system':'mixed'}
 function plcClass(p){return p===PLACEMENT.SLOT?'slot':p===PLACEMENT.BLOCK?'block':'none'}
 function fmtHours(h){if(h==null||!Number.isFinite(h))return'—';
@@ -677,7 +832,14 @@ function renderAccuracy(){
       sub:`${c.blockRate.toFixed(1)}% — blok sudah ada, slot belum diisi`},
     {cls:'bad',label:'Belum Ada Lokasi',value:fmt.format(c.never),
       sub:`${c.neverRate.toFixed(1)}% — tidak ada event lokasi sama sekali`}];
-  $('accStrip').innerHTML=cards.map(x=>`<div class="acc-card ${x.cls}"><div class="acc-label">${esc(x.label)}</div><div class="acc-value">${x.value}</div><div class="acc-sub">${x.sub}</div></div>`).join('');
+  /* the KPI row above already carries the counts; this strip only adds what it cannot show */
+  $('accStrip').innerHTML=`<div class="acc-card bar-card"><div class="acc-label">Komposisi</div><div class="stackbar">
+      <span class="sb sb-slot" style="width:${c.rate.toFixed(2)}%" title="Slot lengkap ${c.rate.toFixed(1)}%"></span>
+      <span class="sb sb-block" style="width:${c.blockRate.toFixed(2)}%" title="Blok saja ${c.blockRate.toFixed(1)}%"></span>
+      <span class="sb sb-none" style="width:${c.neverRate.toFixed(2)}%" title="Belum ada lokasi ${c.neverRate.toFixed(1)}%"></span></div>
+      <div class="acc-sub"><span class="k k-slot"></span>Slot ${c.rate.toFixed(1)}% <span class="k k-block"></span>Blok ${c.blockRate.toFixed(1)}% <span class="k k-none"></span>Kosong ${c.neverRate.toFixed(1)}%</div></div>
+    <div class="acc-card neutral"><div class="acc-label">Belum Lengkap</div><div class="acc-value">${fmt.format(c.incomplete)}</div><div class="acc-sub">${(c.total?c.incomplete/c.total*100:0).toFixed(1)}% dari total dinilai</div></div>
+    <div class="acc-card ${c.nonStandard?'warn':'good'}"><div class="acc-label">Kode Non-Standar</div><div class="acc-value">${fmt.format(c.nonStandard)}</div><div class="acc-sub">Format lokasi di luar Blok.Bay.Baris</div></div>`;
 
   const noHist=c.noHistory,ns=c.nonStandard;
   $('accNote').innerHTML=`<b>Cara baca:</b> <b>Slot Lengkap</b> = lokasi detail seperti C1.02.01 atau D107032. <b>Blok Saja</b> = baru blok seperti C3/A4 — container ada di blok itu tapi posisi persisnya tidak diketahui. <b>Belum Ada Lokasi</b> = kolom Location kosong dan tidak ada riwayat sama sekali.<br>
@@ -710,21 +872,21 @@ function renderOrphans(scope){
 
 /* ---------- operator performance ---------- */
 const OP_COLUMNS={
-  ALL:[['name','Operator','txt'],['role','Peran','role'],['events','Total Move','num'],
-       ['slotEvents','Move ke Slot','num'],['blockEvents','Move ke Blok','num'],
-       ['precision','Presisi Slot','pct85'],['holdsNow','Dipegang Sekarang','num'],
-       ['assignedPending','Pending Slot','pend'],['lastSeen','Aktivitas Terakhir','date']],
-  [ROLE.STACKER]:[['name','Operator','txt'],['events','Total Move','num'],['slotEvents','Move ke Slot','num'],
-       ['precision','Presisi Slot','pct85'],['holdsNow','Container Dipegang','num'],
-       ['nonStandard','Kode Non-Standar','num'],['lastSeen','Aktivitas Terakhir','date']],
-  [ROLE.GATE]:[['name','Operator','txt'],['events','Total Move','num'],['assigned','Blok Ditetapkan','num'],
-       ['assignedResolved','Sudah Di-slot','num'],['assignedPending','Masih Pending','pend'],
-       ['clearRate','% Terselesaikan','pct75'],['medianHandoffH','Median Handoff','hours'],
-       ['medianPendingD','Median Umur Pending','days'],['oldestPendingD','Pending Tertua','days'],
-       ['pendingOver30','Pending &gt;30hr','pend']],
-  [ROLE.MIXED]:[['name','Operator','txt'],['events','Total Move','num'],['slotEvents','Move ke Slot','num'],
-       ['blockEvents','Move ke Blok','num'],['precision','Presisi Slot','pct85'],
-       ['holdsNow','Dipegang Sekarang','num'],['assignedPending','Pending Slot','pend'],['lastSeen','Aktivitas Terakhir','date']],
+  ALL:[['name','Operator','txt'],['role','Peran','role'],['quality','Skor','qual'],['flags','Temuan','flags'],
+       ['events','Move','num'],['slotEvents','Slot','num'],['blockEvents','Blok','num'],
+       ['holdsNow','Dipegang','num'],['assignedPending','Pending','pend'],['dormantDays','Pasif','dormant']],
+  [ROLE.STACKER]:[['name','Operator','txt'],['quality','Skor','qual'],['flags','Temuan','flags'],
+       ['slotEvents','Slot','num'],['holdsNow','Dipegang','num'],
+       ['reworkRate','Rework','reworkpct'],['nonStdRate','Kode Aneh','nonstdpct'],
+       ['volumeRatio','vs Median','ratio'],['dormantDays','Pasif','dormant']],
+  [ROLE.GATE]:[['name','Operator','txt'],['flags','Temuan','flags'],['assigned','Blok Ditetapkan','num'],
+       ['assignedResolved','Di-slot','num'],['assignedPending','Pending','pend'],
+       ['clearRate','% Selesai','pct75'],['medianHandoffH','Med. Handoff','hours'],
+       ['medianPendingD','Med. Umur','days'],['oldestPendingD','Tertua','days'],
+       ['pendingOver30','&gt;30hr','pend'],['dormantDays','Pasif','dormant']],
+  [ROLE.MIXED]:[['name','Operator','txt'],['quality','Skor','qual'],['flags','Temuan','flags'],
+       ['events','Move','num'],['slotEvents','Slot','num'],['blockEvents','Blok','num'],
+       ['reworkRate','Rework','reworkpct'],['holdsNow','Dipegang','num'],['assignedPending','Pending','pend'],['dormantDays','Pasif','dormant']],
   [ROLE.SYSTEM]:[['name','Akun','txt'],['events','Total Move','num'],['slotEvents','Move ke Slot','num'],
        ['blockEvents','Move ke Blok','num'],['holdsNow','Dipegang Sekarang','num'],['lastSeen','Aktivitas Terakhir','date']]};
 
@@ -740,6 +902,15 @@ function opCell(o,key,kind){
     case'hours':return`<td class="num">${fmtHours(v)}</td>`;
     case'days':return`<td class="num">${v==null?'—':`<span class="${v>30?'pill-bad':v>7?'pill-warn':''}">${fmtDays(v)}</span>`}</td>`;
     case'date':return`<td>${v?esc(formatDateTime(v)):'—'}</td>`;
+    case'qual':return v==null?'<td class="num"><span class="qual q-na" title="Sampel terlalu kecil untuk diberi skor">n/a</span></td>'
+      :`<td class="num"><span class="qual ${v>=90?'q-ok':v>=70?'q-mid':'q-bad'}">${v}</span></td>`;
+    case'flags':return`<td class="flagcell">${(o.flags&&o.flags.length)?o.flags.map(f=>`<span class="flag f-${f.k}" title="${esc(f.d)}">${f.t}</span>`).join(''):'<span class="flag f-ok">Bersih</span>'}</td>`;
+    case'reworkpct':return`<td class="num">${o.slotEvents?`<span class="${v>=FLAG.rework?'pill-bad':v>=2?'pill-warn':''}">${v.toFixed(1)}%</span><small class="sub2">${fmt.format(o.rework)}x</small>`:'—'}</td>`;
+    case'nonstdpct':{if(!o.slotEvents)return'<td class="num">—</td>';
+      const extra=o.nonStandard?`<small class="sub2">${fmt.format(o.nonStandard)}x</small>`:'';
+      return`<td class="num"><span class="${v>=FLAG.nonStd?'pill-bad':''}">${v.toFixed(1)}%</span>${extra}</td>`}
+    case'ratio':return`<td class="num">${v==null?'—':`<span class="${v<FLAG.lowVolumeRatio?'pill-warn':''}">${Math.round(v*100)}%</span>`}</td>`;
+    case'dormant':return`<td class="num">${v==null?'—':`<span class="${v>=30?'pill-bad':v>=FLAG.dormantDays?'pill-warn':''}">${v} hr</span>`}</td>`;
     default:return`<td>${esc(v??'—')}</td>`}}
 
 function renderOperatorPerformance(){
@@ -750,11 +921,17 @@ function renderOperatorPerformance(){
     .filter(([k])=>k==='ALL'||counts[k]>0)
     .map(([k,label])=>`<button class="role-tab${accRoleFilter===k?' active':''}" data-role="${esc(k)}" type="button">${esc(label)}<small>${fmt.format(counts[k]||0)}</small></button>`).join('');
   $('roleTabs').querySelectorAll('[data-role]').forEach(el=>el.addEventListener('click',()=>{
-    accRoleFilter=el.dataset.role;accSelectedOperator='';renderOperatorPerformance()}));
+    accRoleFilter=el.dataset.role;accSelectedOperator='';
+    /* each lens opens on the question it exists to answer */
+    if(accRoleFilter===ROLE.STACKER||accRoleFilter===ROLE.MIXED){accSortKey='quality';accSortDir='asc'}
+    else if(accRoleFilter===ROLE.GATE){accSortKey='assignedPending';accSortDir='desc'}
+    else{accSortKey='events';accSortDir='desc'}
+    renderOperatorPerformance()}));
 
   const q=$('operatorSearch').value.trim().toLowerCase();
   let list=accRoleFilter==='ALL'?all:all.filter(o=>o.role===accRoleFilter);
   if(q)list=list.filter(o=>o.name.includes(q));
+  if(accReviewOnly)list=list.filter(o=>o.needsReview);
   const dir=accSortDir==='desc'?-1:1;
   list=[...list].sort((a,b)=>{
     const av=a[accSortKey],bv=b[accSortKey];
@@ -766,9 +943,13 @@ function renderOperatorPerformance(){
   const limitRaw=$('operatorLimit').value,shown=limitRaw==='ALL'?list:list.slice(0,Number(limitRaw)||20);
 
   const stackers=all.filter(o=>o.role===ROLE.STACKER),gates=all.filter(o=>o.role===ROLE.GATE);
-  const totalPending=all.reduce((n,o)=>n+o.assignedPending,0);
+  const scopeAll=accRoleFilter==='ALL'?all:all.filter(o=>o.role===accRoleFilter);
+  const flagged=scopeAll.filter(o=>o.needsReview);
+  const btn=$('reviewOnlyBtn');
+  if(btn){btn.classList.toggle('active',accReviewOnly);
+    btn.textContent=accReviewOnly?`Tampilkan Semua (${fmt.format(scopeAll.length)})`:`Hanya Perlu Ditinjau (${fmt.format(flagged.length)})`}
   $('operatorSummary').innerHTML=all.length
-    ?`<b>${fmt.format(all.length)} operator aktif</b> • ${fmt.format(stackers.length)} stacker • ${fmt.format(gates.length)} gate/receiving • ${fmt.format(totalPending)} container menunggu di-slot`
+    ?`<b>${fmt.format(all.length)} operator</b> • ${fmt.format(stackers.length)} stacker • ${fmt.format(gates.length)} gate/receiving • <b class="${flagged.length?'pill-bad':'pill-ok'}">${fmt.format(flagged.length)} perlu ditinjau</b> pada tab ini`
     :'Kolom All Location History belum tersedia pada data ini — upload file stock terbaru untuk mengaktifkan modul ini.';
 
   const cols=OP_COLUMNS[accRoleFilter]||OP_COLUMNS.ALL;
@@ -792,14 +973,23 @@ function renderOperatorDrill(all){
   if(!accSelectedOperator){host.innerHTML='';return}
   const o=all.find(x=>x.name===accSelectedOperator);
   if(!o){host.innerHTML='';return}
+  const peerList=all.filter(x=>x.role===o.role&&!x.smallSample).map(x=>x.reworkRate).sort((a,b)=>a-b);
+  const peerRework=peerList.length?peerList[peerList.length>>1]:null;
+  const findings=o.flags&&o.flags.length
+    ?`<div class="find-list">${o.flags.map(f=>`<div class="find"><span class="flag f-${f.k}">${f.t}</span><span>${esc(f.d)}</span></div>`).join('')}</div>`
+    :'<div class="find-list"><div class="find"><span class="flag f-ok">Bersih</span><span>Tidak ada indikasi masalah pada data update lokasi operator ini.</span></div></div>';
   const metrics=o.role===ROLE.GATE
     ?[['Total Move',fmt.format(o.events)],['Blok Ditetapkan',fmt.format(o.assigned)],
       ['Sudah Di-slot',fmt.format(o.assignedResolved)],['Masih Pending',fmt.format(o.assignedPending)],
       ['% Terselesaikan',o.clearRate==null?'—':o.clearRate.toFixed(1)+'%'],
       ['Median Handoff',fmtHours(o.medianHandoffH)],['Pending Tertua',fmtDays(o.oldestPendingD)]]
-    :[['Total Move',fmt.format(o.events)],['Move ke Slot',fmt.format(o.slotEvents)],
-      ['Move ke Blok',fmt.format(o.blockEvents)],['Presisi Slot',o.precision.toFixed(1)+'%'],
-      ['Container Dipegang',fmt.format(o.holdsNow)],['Kode Non-Standar',fmt.format(o.nonStandard)],
+    :[['Skor Kualitas',String(o.quality)],['Total Move',fmt.format(o.events)],
+      ['Move ke Slot',fmt.format(o.slotEvents)],['Container Dipegang',fmt.format(o.holdsNow)],
+      ['Rework (<6 jam)',`${o.reworkRate.toFixed(1)}% (${fmt.format(o.rework)}x)`],
+      ['— diperbaiki org lain',fmt.format(o.reworkByOther)],
+      ['Rework median rekan',`${(peerRework==null?0:peerRework).toFixed(1)}%`],
+      ['Kode Non-Standar',`${o.nonStdRate.toFixed(1)}% (${fmt.format(o.nonStandard)}x)`],
+      ['Volume vs Median',o.volumeRatio==null?'—':Math.round(o.volumeRatio*100)+'%'],
       ['Aktivitas Terakhir',o.lastSeen?formatDateTime(o.lastSeen):'—']];
   const pending=o.containers.filter(r=>r._placement===PLACEMENT.BLOCK&&r._blockBy===o.name)
     .sort((a,b)=>(b._pendingDays??0)-(a._pendingDays??0)).slice(0,50);
@@ -807,15 +997,18 @@ function renderOperatorDrill(all){
     ?'<b>Catatan penilaian:</b> operator ini menetapkan blok saat container masuk — melengkapi slot adalah tugas stacker. Kolom <b>Masih Pending</b> dan <b>Median Handoff</b> adalah <u>metrik bersama</u> gate dan stacker, bukan nilai pribadi operator ini.'
     :o.role===ROLE.SYSTEM?'<b>Catatan penilaian:</b> ini akun sistem/EDI, bukan operator manusia. Jangan dimasukkan ke penilaian performa individu.'
     :o.role===ROLE.MIXED?'<b>Catatan penilaian:</b> operator ini mengerjakan kedua tahap (penetapan blok dan slotting). Nilai presisi dan backlog perlu dibaca bersama.'
-    :'<b>Catatan penilaian:</b> operator ini bekerja pada tahap slotting. <b>Presisi Slot</b> adalah metrik utamanya.';
+    :'<b>Catatan penilaian:</b> semua stacker menaruh slot lengkap 100% — angka itu tidak membedakan siapapun. Yang membedakan adalah <b>rework</b>, <b>kode non-standar</b>, <b>volume</b>, dan <b>keaktifan</b>. Skor ini alat penyaring untuk bahan percakapan, <u>bukan bukti kesalahan</u>, dan tidak dapat membuktikan container benar-benar ada di slot yang diketik — itu perlu stock take fisik.';
   host.innerHTML=`<div class="drill">
     <div class="drill-head">
       <h3 class="drill-title">${esc(o.name)} <span class="role-badge ${roleClass(o.role)}">${esc(o.role)}</span></h3>
       <button class="btn btn-ghost btn-small" type="button" id="closeDrill">Tutup</button>
     </div>
     <div class="acc-note">${note}</div>
+    ${findings}
     <div class="drill-metrics">${metrics.map(([l,v])=>`<div class="drill-metric"><div class="acc-label">${esc(l)}</div><b>${v}</b></div>`).join('')}</div>
-    ${pending.length?`<div class="section-sub" style="font-weight:850;color:#334155;margin-bottom:8px">Container yang ditetapkan operator ini dan masih menunggu slot (${fmt.format(pending.length)} teratas)</div>
+    ${o.reworkCases.length?`<div class="section-sub" style="font-weight:850;color:#334155;margin:12px 0 8px">Entri yang diganti dalam &lt;6 jam — bukti mentah, cek sendiri (${fmt.format(o.reworkCases.length)} teratas)</div>
+    <div class="scroll-table" style="max-height:220px"><table><thead><tr><th>Container</th><th>Diketik</th><th>Diganti Jadi</th><th>Oleh</th><th class="num">Selang</th><th>Waktu</th></tr></thead><tbody>${o.reworkCases.slice(0,40).sort((a,b)=>a.mins-b.mins).map(c=>`<tr><td><b>${esc(c.cont||'-')}</b></td><td><span class="mono">${esc(c.from)}</span></td><td><span class="mono">${esc(c.to)}</span></td><td>${c.self?'<span class="flag f-small">sendiri</span>':`<span class="flag f-rework">${esc(c.by)}</span>`}</td><td class="num">${c.mins} mnt</td><td>${esc(formatDateTime(c.at))}</td></tr>`).join('')}</tbody></table></div>`:''}
+    ${pending.length?`<div class="section-sub" style="font-weight:850;color:#334155;margin:12px 0 8px">Container yang ditetapkan operator ini dan masih menunggu slot (${fmt.format(pending.length)} teratas)</div>
     <div class="scroll-table" style="max-height:260px"><table><thead><tr><th>Container</th><th>Owner</th><th>Blok</th><th>Ditetapkan</th><th class="num">Umur Pending</th></tr></thead><tbody>${pending.map(r=>`<tr><td><b>${esc(r.Cont||'-')}</b></td><td>${esc(r.Owner||'-')}</td><td>${esc(r.Location||r._effectiveLoc||'-')}</td><td>${r._blockAt?esc(formatDateTime(r._blockAt)):'—'}</td><td class="num"><span class="${(r._pendingDays??0)>30?'pill-bad':(r._pendingDays??0)>7?'pill-warn':''}">${fmtDays(r._pendingDays)}</span></td></tr>`).join('')}</tbody></table></div>`
     :'<div class="acc-empty">Tidak ada container pending atas nama operator ini.</div>'}
   </div>`;
@@ -827,7 +1020,13 @@ function operatorRoleMap(rows){
   const m=new Map();for(const o of operatorStats(rows))m.set(o.name,o.role);
   _roleMapSrc=rows;_roleMapCache=m;return m}
 function renderStackingPerformance(){_roleMapCache=null;renderAccuracy();renderOperatorPerformance()}
-function renderAll(){const s=summarize(eligibleData);$('kpiTotal').textContent=fmt.format(periodData.length);$('kpiEligible').textContent=fmt.format(eligibleData.length);$('kpiUpdated').textContent=fmt.format(s.updated);$('kpiNoUpdate').textContent=fmt.format(s.noUpdate);$('kpiRate').textContent=`${s.rate.toFixed(1)}%`;{const cc=completenessStats(eligibleData),el=$('kpiRateSub');if(el)el.textContent=`${fmt.format(cc.slotted)} slot lengkap • ${fmt.format(cc.blockOnly)} blok saja • ${fmt.format(cc.never)} belum ada lokasi`}const denom=currentType==='tps'?'stock yang dinilai':'stock sesuai filter';$('kpiUpdatedSub').textContent=`${s.rate.toFixed(1)}% dari ${denom}`;$('kpiNoUpdateSub').textContent=`${(s.total?s.noUpdate/s.total*100:0).toFixed(1)}% dari ${denom}`;$('kpiPeriod').textContent=currentMode==='overall'?'Semua tanggal dan jam Dtm IN':currentMode==='ageing'?durationFilterText():currentMode==='dmratio'?'Seluruh stock Premium untuk DM Ratio':`${$('startDateTime').value.replace('T',' ')} → ${$('endDateTime').value.replace('T',' ')}`;$('totalLabel').textContent=currentType==='tps'?'Total Stock TPS':currentMode==='ageing'?'Premium Sesuai Duration':currentMode==='dmratio'?'Total Stock Premium':'Total Stock Premium';$('pieSubtitle').textContent=currentType==='tps'?'Hanya stock TPS di luar SIL, KCN, dan DWI':currentMode==='ageing'?durationFilterText():currentMode==='dmratio'?'DM Ratio Premium':'Komposisi stock Premium berdasarkan kelengkapan location';$('pieRate').textContent=`${s.rate.toFixed(1)}%`;$('legendUpdated').textContent=fmt.format(s.updated);$('legendNoUpdate').textContent=fmt.format(s.noUpdate);$('legendUpdatedPct').textContent=`${s.rate.toFixed(1)}% dari ${denom}`;$('legendNoUpdatePct').textContent=`${(s.total?s.noUpdate/s.total*100:0).toFixed(1)}% dari ${denom}`;const deg=s.total?s.updated/s.total*360:0;$('pieChart').style.background=s.total?`conic-gradient(var(--green) 0deg ${deg}deg,var(--red) ${deg}deg 360deg)`:'#e5e7eb';renderBreakdown('ownerTable',r=>r.Owner||'(Blank)','Owner');renderBreakdown('sizeTypeTable',r=>r._sizeType,'Size Type');renderBreakdown('conditionTable',r=>r.Condition||'(Blank)','Condition');renderBreakdown('gradeTable',r=>gradeBucket(r.Grade),'Kelompok Grade',['PQC','K','Q']);renderBreakdown('actInTable',r=>r['Act IN']||'(Blank)','Act IN');renderMatrix();if(currentType==='tps'){renderTpsCapacity();renderExternal()}if(currentType==='premium'&&currentMode==='ageing')renderAgeing();if(currentType==='premium'&&currentMode==='dmratio')renderDmRatio();populateDetailFilters();renderStackingPerformance();applyDetailFilters()}
+function renderAll(){const s=summarize(eligibleData);$('kpiTotal').textContent=fmt.format(periodData.length);$('kpiEligible').textContent=fmt.format(eligibleData.length);{const c3=completenessStats(eligibleData);
+  $('kpiUpdated').textContent=fmt.format(c3.slotted);
+  $('kpiNoUpdate').textContent=fmt.format(c3.never);
+  const bo=$('kpiBlockOnly');if(bo)bo.textContent=fmt.format(c3.blockOnly);
+  const bos=$('kpiBlockOnlySub');if(bos)bos.textContent=`${c3.blockRate.toFixed(1)}% — blok ada, slot belum diisi`;}$('kpiRate').textContent=`${s.rate.toFixed(1)}%`;{const cc=completenessStats(eligibleData),el=$('kpiRateSub');if(el)el.textContent=`${fmt.format(cc.slotted)} slot lengkap • ${fmt.format(cc.blockOnly)} blok saja • ${fmt.format(cc.never)} belum ada lokasi`}const denom=currentType==='tps'?'stock yang dinilai':'stock sesuai filter';{const c4=completenessStats(eligibleData);
+  $('kpiUpdatedSub').textContent=`${c4.rate.toFixed(1)}% dari ${denom}`;
+  $('kpiNoUpdateSub').textContent=`${c4.neverRate.toFixed(1)}% — tanpa riwayat lokasi`;}$('kpiPeriod').textContent=currentMode==='overall'?'Semua tanggal dan jam Dtm IN':currentMode==='ageing'?durationFilterText():currentMode==='dmratio'?'Seluruh stock Premium untuk DM Ratio':`${$('startDateTime').value.replace('T',' ')} → ${$('endDateTime').value.replace('T',' ')}`;$('totalLabel').textContent=currentType==='tps'?'Total Stock TPS':currentMode==='ageing'?'Premium Sesuai Duration':currentMode==='dmratio'?'Total Stock Premium':'Total Stock Premium';$('pieSubtitle').textContent=currentType==='tps'?'Hanya stock TPS di luar SIL, KCN, dan DWI':currentMode==='ageing'?durationFilterText():currentMode==='dmratio'?'DM Ratio Premium':'Komposisi stock Premium berdasarkan kelengkapan location';$('pieRate').textContent=`${s.rate.toFixed(1)}%`;$('legendUpdated').textContent=fmt.format(s.updated);$('legendNoUpdate').textContent=fmt.format(s.noUpdate);$('legendUpdatedPct').textContent=`${s.rate.toFixed(1)}% dari ${denom}`;$('legendNoUpdatePct').textContent=`${(s.total?s.noUpdate/s.total*100:0).toFixed(1)}% dari ${denom}`;const deg=s.total?s.updated/s.total*360:0;$('pieChart').style.background=s.total?`conic-gradient(var(--green) 0deg ${deg}deg,var(--red) ${deg}deg 360deg)`:'#e5e7eb';renderBreakdown('ownerTable',r=>r.Owner||'(Blank)','Owner');renderBreakdown('sizeTypeTable',r=>r._sizeType,'Size Type');renderBreakdown('conditionTable',r=>r.Condition||'(Blank)','Condition');renderBreakdown('gradeTable',r=>gradeBucket(r.Grade),'Kelompok Grade',['PQC','K','Q']);renderBreakdown('actInTable',r=>r['Act IN']||'(Blank)','Act IN');renderMatrix();if(currentType==='tps'){renderTpsCapacity();renderExternal()}if(currentType==='premium'&&currentMode==='ageing')renderAgeing();if(currentType==='premium'&&currentMode==='dmratio')renderDmRatio();populateDetailFilters();renderStackingPerformance();applyDetailFilters()}
 function renderTpsCapacity(){if(currentType!=='tps')return;const stats=tpsCapacityStats(allData),caps=currentTpsCapacities();for(const d of TPS_DEPOTS){const max=caps[d],current=stats[d].teus,remaining=max-current,util=max>0?current/max*100:(current>0?100:0),card=document.querySelector(`.capacity-card[data-depot="${d}"]`);$(`capacityCurrent${d}`).textContent=`${fmt.format(current)} TEUs`;$(`capacityUnits${d}`).textContent=`${fmt.format(stats[d].units)} units`;$(`capacityRemaining${d}`).textContent=remaining>=0?`${fmt.format(remaining)} TEUs`:`Over ${fmt.format(Math.abs(remaining))} TEUs`;$(`capacityStatus${d}`).textContent=remaining>=0?'Available for incoming':'Over Capacity';$(`capacityUtil${d}`).textContent=`${util.toFixed(1)}%`;$(`capacityFill${d}`).style.width=`${Math.min(100,Math.max(0,util))}%`;card.classList.toggle('over',remaining<0);card.classList.toggle('warning',remaining>=0&&util>=85)}}
 function renderBreakdown(id,keyFn,label,order=[]){const map=new Map();for(const r of eligibleData){const key=keyFn(r);if(!map.has(key))map.set(key,{key,updated:0,noUpdate:0,total:0});const x=map.get(key);x.total++;r._updated?x.updated++:x.noUpdate++}let rows=[...map.values()];if(order.length)rows.sort((a,b)=>{const ai=order.indexOf(a.key),bi=order.indexOf(b.key);return(ai<0?999:ai)-(bi<0?999:bi)});else rows.sort((a,b)=>b.total-a.total||String(a.key).localeCompare(String(b.key)));const head=`<thead><tr><th>${esc(label)}</th><th class="num">Slot Lengkap</th><th class="num">Belum Lengkap</th><th class="num">Total</th><th>Completeness</th></tr></thead>`;const body=rows.length?rows.map(x=>{const rate=x.total?x.updated/x.total*100:0;return`<tr><td><b>${esc(x.key)}</b></td><td class="num">${fmt.format(x.updated)}</td><td class="num">${fmt.format(x.noUpdate)}</td><td class="num"><b>${fmt.format(x.total)}</b></td><td class="rate-cell">${rate.toFixed(1)}%<div class="rate-bar"><div class="rate-fill" style="width:${rate}%"></div></div></td></tr>`}).join(''):`<tr><td colspan="5"><div class="empty">Tidak ada data.</div></td></tr>`;$(id).innerHTML=head+`<tbody>${body}</tbody>`}
 function renderExternal(){const stats=tpsCapacityStats(allData),caps=currentTpsCapacities(),totalTeus=TPS_DEPOTS.reduce((n,d)=>n+stats[d].teus,0),head='<thead><tr><th>Depot</th><th class="num">Units</th><th class="num">Current TEUs</th><th class="num">Maximum TEUs</th><th class="num">Remaining</th><th class="num">Utilization</th></tr></thead>',body=TPS_DEPOTS.map(d=>{const max=caps[d],current=stats[d].teus,remaining=max-current,util=max>0?current/max*100:(current>0?100:0);return`<tr><td><span class="depot-badge ${d.toLowerCase()}">${depotDisplayName(d)}</span></td><td class="num">${fmt.format(stats[d].units)}</td><td class="num"><b>${fmt.format(current)}</b></td><td class="num">${fmt.format(max)}</td><td class="num"><b>${remaining>=0?fmt.format(remaining):`Over ${fmt.format(Math.abs(remaining))}`}</b></td><td class="num">${util.toFixed(1)}%</td></tr>`}).join('');$('externalTable').innerHTML=head+`<tbody>${body}</tbody><tfoot><tr><td><b>Total</b></td><td class="num"><b>${fmt.format(TPS_DEPOTS.reduce((n,d)=>n+stats[d].units,0))}</b></td><td class="num"><b>${fmt.format(totalTeus)}</b></td><td class="num"><b>${fmt.format(TPS_DEPOTS.reduce((n,d)=>n+caps[d],0))}</b></td><td class="num"><b>${fmt.format(TPS_DEPOTS.reduce((n,d)=>n+caps[d]-stats[d].teus,0))}</b></td><td class="num"><b>${(TPS_DEPOTS.reduce((n,d)=>n+caps[d],0)?totalTeus/TPS_DEPOTS.reduce((n,d)=>n+caps[d],0)*100:0).toFixed(1)}%</b></td></tr></tfoot>`}
@@ -878,10 +1077,23 @@ function exportExcel(){if(!periodData.length){setMessage('Tidak ada data untuk d
     ['Umur Pending (Blok Saja)','Jumlah',''],
     ...pb.buckets.map(b=>[`Pending > ${b.days} hari`,b.count,`${(pb.total?b.count/pb.total*100:0).toFixed(1)}% dari pending`])]});
   const ops=operatorStats(eligibleData);
-  sheets.push({name:'Operator - Stacker',widths:[22,14,14,14,16,18,20],rows:[
-    ['Operator','Peran','Total Move','Move ke Slot','Presisi Slot','Container Dipegang','Kode Non-Standar'],
+  sheets.push({name:'Operator - Stacker',widths:[20,17,10,10,12,12,13,14,12,11,34],rows:[
+    ['Operator','Peran','Skor','Move','Slot','Dipegang','Rework %','Rework (x)','Diperbaiki Org Lain','Kode Aneh %','Kode Aneh (x)','Volume vs Median','Pasif (hari)','Sampel Kecil','Temuan'],
     ...ops.filter(o=>o.role===ROLE.STACKER||o.role===ROLE.MIXED)
-      .map(o=>[o.name,o.role,o.events,o.slotEvents,`${o.precision.toFixed(1)}%`,o.holdsNow,o.nonStandard])]});
+      .sort((a,b)=>(a.quality==null?999:a.quality)-(b.quality==null?999:b.quality))
+      .map(o=>[o.name,o.role,o.quality==null?'n/a':o.quality,o.events,o.slotEvents,o.holdsNow,
+        Number(o.reworkRate.toFixed(1)),o.rework,o.reworkByOther,
+        Number(o.nonStdRate.toFixed(1)),o.nonStandard,
+        o.volumeRatio==null?'':Math.round(o.volumeRatio*100)+'%',
+        o.dormantDays==null?'':o.dormantDays,o.smallSample?'Ya':'',
+        (o.flags||[]).map(f=>f.t).join('; ')])]});
+  /* raw evidence behind every rework flag, so a finding can be checked line by line */
+  const rw=[];
+  for(const o of ops){for(const c of (o.reworkCases||[]))
+    rw.push([o.name,o.role,c.cont,c.from,c.to,c.self?'sendiri':c.by,c.mins,formatDateTime(c.at)])}
+  rw.sort((a,b)=>a[0].localeCompare(b[0])||a[6]-b[6]);
+  sheets.push({name:'Bukti Rework',widths:[18,17,21,14,14,16,12,21],rows:[
+    ['Operator','Peran','Container','Lokasi Diketik','Diganti Jadi','Diperbaiki Oleh','Selang (menit)','Waktu Entri'],...rw]});
   sheets.push({name:'Operator - Gate',widths:[22,14,16,16,15,16,18,20,16,16],rows:[
     ['Operator','Peran','Total Move','Blok Ditetapkan','Sudah Di-slot','Masih Pending','% Terselesaikan','Median Handoff (jam)','Median Umur Pending (hr)','Pending Tertua (hr)'],
     ...ops.filter(o=>o.role===ROLE.GATE||o.role===ROLE.MIXED)
@@ -909,7 +1121,8 @@ function exportExcel(){if(!periodData.length){setMessage('Tidak ada data untuk d
       Number.isFinite(r._duration)?r._duration:r.Duration])]});}if(currentType==='premium'){const ageHeaders=['Kriteria Ageing','Total','Update','No Update','Update %','No Update %'],ageRows=[ageHeaders,...[30,60,90,120,180].map(t=>{const x=summarize(allData.filter(r=>Number.isFinite(r._duration)&&r._duration>t));return[`Duration >${t} days`,x.total,x.updated,x.noUpdate,`${x.rate.toFixed(1)}%`,`${(x.total?x.noUpdate/x.total*100:0).toFixed(1)}%`]})];sheets.push({name:'Ageing Summary',rows:ageRows,widths:[24,12,12,14,14,16]});const dm=dmStats(allData),dmSummary=[['Metric','Value'],['Total Premium Stock',dm.total],['Total DM incl. TTL',dm.dm],['Total Loss (Checked)',dm.ttl],['DM non-TTL',dm.dmNonTtl],['DM Ratio With TTL',`${dm.withRate.toFixed(1)}%`],['DM Ratio Without TTL',`${dm.withoutRate.toFixed(1)}%`]];sheets.push({name:'DM Ratio Summary',rows:dmSummary,widths:[28,22],autoFilter:false});for(const [sheetName,keyFn,label] of [['DM by Size Type',r=>r._sizeType,'Size Type'],['DM by Size Grade',r=>sizeGradeKey(r),'Size Type + Grade'],['DM by Owner',r=>r.Owner||'(Blank)','Owner']]){const map=new Map();for(const r of allData){const k=String(keyFn(r)||'(Blank)');if(!map.has(k))map.set(k,[]);map.get(k).push(r)}const rows=[[label,'Stock','DM w/ TTL','With TTL %','TTL','DM w/o TTL','Without TTL %'],...[...map.entries()].map(([k,data])=>{const x=dmStats(data);return[k,x.total,x.dm,`${x.withRate.toFixed(1)}%`,x.ttl,x.dmNonTtl,`${x.withoutRate.toFixed(1)}%`]}).sort((a,b)=>String(a[0]).localeCompare(String(b[0])))];sheets.push({name:sheetName,rows,widths:[24,12,14,14,10,15,16]})}}if(currentType==='tps'){const capRows=[['Depot','Units','Current TEUs','Maximum TEUs','Remaining TEUs','Utilization'],...TPS_DEPOTS.map(d=>{const current=tpsStats[d].teus,max=tpsCaps[d],remaining=max-current;return[depotDisplayName(d),tpsStats[d].units,current,max,remaining,`${(max?current/max*100:0).toFixed(1)}%`]})];sheets.push({name:'TPS Depot Capacity',rows:capRows,widths:[12,12,16,17,17,15]});const extHeaders=['Depot','TEUs','Owner','Container','Size Type','Condition','Grade','Act IN','Dtm IN','Duration','Remark IN','Stacking Name'],ext=[extHeaders,...allData.map(r=>[depotDisplayName(r._tpsSite),r._teu,r.Owner,r.Cont,r._sizeType,r.Condition,r.Grade,r['Act IN'],formatDateTime(r._date),Number.isFinite(r._duration)?r._duration:r.Duration,r['Remark IN'],r._stacker])];sheets.push({name:'TPS All Depot Stock',rows:ext,widths:[10,10,15,21,14,13,10,14,21,11,40,20]})}const blob=createWorkbookBlob(sheets),a=document.createElement('a');a.href=URL.createObjectURL(blob);const tag=currentMode==='overall'?'Total':currentMode==='ageing'?durationFilterText().replace(/[^a-z0-9]+/gi,'_'):`${$('startDateTime').value.replaceAll(':','').replace('T','_')}-${$('endDateTime').value.replaceAll(':','').replace('T','_')}`;a.download=`${CONFIG[currentType].name}_Update_Location_${tag}.xlsx`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);setMessage('Excel berhasil dibuat, termasuk Stacking Name dan Stacking Performance.','ok')}
 
 document.querySelectorAll('[data-open]').forEach(el=>el.addEventListener('click',()=>openDataset(el.dataset.open)));
-$('homeBtn').addEventListener('click',goHome);$('modeRangeBtn').addEventListener('click',()=>setMode('range'));$('modeOverallBtn').addEventListener('click',()=>setMode('overall'));$('modeAgeingBtn').addEventListener('click',()=>setMode('ageing'));$('modeDmRatioBtn').addEventListener('click',()=>setMode('dmratio'));$('applyBtn').addEventListener('click',applyFilters);$('resetBtn').addEventListener('click',()=>{if(currentMode==='ageing'){$('durationMin').value='30';$('durationMax').value=''}else setDefaultRange();applyFilters()});$('restoreBtn').addEventListener('click',restoreDefault);$('fileInput').addEventListener('change',e=>handleUpload(e.target.files[0]));$('exportBtn').addEventListener('click',exportExcel);$('prevPage').addEventListener('click',()=>{currentPage--;renderDetail()});$('nextPage').addEventListener('click',()=>{currentPage++;renderDetail()});$('saveCloudBtn').addEventListener('click',saveCloudSettings);$('loadCloudBtn').addEventListener('click',loadAllFromCloud);$('syncAllBtn').addEventListener('click',syncAllLocalToCloud);document.querySelectorAll('[data-age-min]').forEach(btn=>btn.addEventListener('click',()=>applyAgeingPreset(btn.dataset.ageMin,btn.dataset.ageMax||'')));['searchInput','statusFilter','ownerFilter','sizeFilter','conditionFilter','gradeFilter','stackingFilter','roleFilter'].forEach(id=>{const el=$(id);if(el)el.addEventListener(id==='searchInput'?'input':'change',applyDetailFilters)});['operatorSearch','operatorLimit'].forEach(id=>{const el=$(id);if(el)el.addEventListener(id==='operatorSearch'?'input':'change',renderOperatorPerformance)});{const b=$('resetAccBtn');if(b)b.addEventListener('click',()=>{accAgeFilter=null;accSelectedOperator='';accRoleFilter='ALL';$('operatorSearch').value='';$('statusFilter').value='ALL';if($('roleFilter'))$('roleFilter').value='ALL';renderStackingPerformance();applyDetailFilters()})};;TPS_DEPOTS.forEach(d=>$(`capacity${d}`).addEventListener('input',saveAndRenderTpsCapacity));$('resetCapacityBtn').addEventListener('click',()=>{writeTpsCapacities(TPS_CAPACITY_DEFAULTS);loadTpsCapacityInputs();renderTpsCapacity();renderExternal();setMessage('Maximum TEUs dikembalikan ke nilai awal.','ok')});['startDateTime','endDateTime'].forEach(id=>$(id).addEventListener('change',()=>{if(currentMode==='range')applyFilters()}));['durationMin','durationMax'].forEach(id=>$(id).addEventListener('change',()=>{if(currentMode==='ageing')applyFilters()}));
+$('homeBtn').addEventListener('click',goHome);$('modeRangeBtn').addEventListener('click',()=>setMode('range'));$('modeOverallBtn').addEventListener('click',()=>setMode('overall'));$('modeAgeingBtn').addEventListener('click',()=>setMode('ageing'));$('modeDmRatioBtn').addEventListener('click',()=>setMode('dmratio'));$('applyBtn').addEventListener('click',applyFilters);$('resetBtn').addEventListener('click',()=>{if(currentMode==='ageing'){$('durationMin').value='30';$('durationMax').value=''}else setDefaultRange();applyFilters()});$('restoreBtn').addEventListener('click',restoreDefault);$('fileInput').addEventListener('change',e=>handleUpload(e.target.files[0]));$('exportBtn').addEventListener('click',exportExcel);$('prevPage').addEventListener('click',()=>{currentPage--;renderDetail()});$('nextPage').addEventListener('click',()=>{currentPage++;renderDetail()});$('saveCloudBtn').addEventListener('click',saveCloudSettings);$('loadCloudBtn').addEventListener('click',loadAllFromCloud);$('syncAllBtn').addEventListener('click',syncAllLocalToCloud);document.querySelectorAll('[data-age-min]').forEach(btn=>btn.addEventListener('click',()=>applyAgeingPreset(btn.dataset.ageMin,btn.dataset.ageMax||'')));['searchInput','statusFilter','ownerFilter','sizeFilter','conditionFilter','gradeFilter','stackingFilter','roleFilter'].forEach(id=>{const el=$(id);if(el)el.addEventListener(id==='searchInput'?'input':'change',applyDetailFilters)});['operatorSearch','operatorLimit'].forEach(id=>{const el=$(id);if(el)el.addEventListener(id==='operatorSearch'?'input':'change',renderOperatorPerformance)});
+{const rb=$('reviewOnlyBtn');if(rb)rb.addEventListener('click',()=>{accReviewOnly=!accReviewOnly;renderOperatorPerformance()})}{const b=$('resetAccBtn');if(b)b.addEventListener('click',()=>{accAgeFilter=null;accSelectedOperator='';accRoleFilter='ALL';$('operatorSearch').value='';$('statusFilter').value='ALL';if($('roleFilter'))$('roleFilter').value='ALL';renderStackingPerformance();applyDetailFilters()})};;TPS_DEPOTS.forEach(d=>$(`capacity${d}`).addEventListener('input',saveAndRenderTpsCapacity));$('resetCapacityBtn').addEventListener('click',()=>{writeTpsCapacities(TPS_CAPACITY_DEFAULTS);loadTpsCapacityInputs();renderTpsCapacity();renderExternal();setMessage('Maximum TEUs dikembalikan ke nilai awal.','ok')});['startDateTime','endDateTime'].forEach(id=>$(id).addEventListener('change',()=>{if(currentMode==='range')applyFilters()}));['durationMin','durationMax'].forEach(id=>$(id).addEventListener('change',()=>{if(currentMode==='ageing')applyFilters()}));
 loadTpsCapacityInputs();
 cloudBootstrapPromise=bootstrapCloudData();
 </script>
